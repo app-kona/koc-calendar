@@ -1,0 +1,2 @@
+index.htmlはOCEANのオーナー向けカレンダー
+cleaning.htmlは清掃カレンダー
