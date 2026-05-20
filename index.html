@@ -32,9 +32,55 @@
             height: 100%;
             border: none;
         }
+        /* パスワードゲート：未認証時は本体を完全に隠す */
+        body.locked > :not(#passwordGate) { display: none !important; }
+        #passwordGate { display: none; }
+        body.locked #passwordGate { display: flex; }
     </style>
 </head>
-<body class="bg-sky-50 text-gray-800 font-sans min-h-screen flex flex-col">
+<body class="bg-sky-50 text-gray-800 font-sans min-h-screen flex flex-col locked">
+
+    <!-- パスワードゲート -->
+    <div id="passwordGate" class="fixed inset-0 z-50 bg-cyan-900 bg-opacity-95 flex-col items-center justify-center p-6">
+        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-sm w-full text-center">
+            <h2 class="text-xl font-bold text-cyan-800 tracking-widest mb-2">KONA OCEAN CLUB</h2>
+            <p class="text-sm text-gray-600 mb-6">閲覧にはパスワードが必要です</p>
+            <input type="password" id="passwordInput" class="w-full border border-gray-300 rounded-md px-3 py-3 text-center text-lg focus:outline-none focus:ring-2 focus:ring-cyan-500" placeholder="パスワード" autocomplete="off">
+            <p id="passwordError" class="text-sm text-red-600 mt-2 hidden">パスワードが違います</p>
+            <button type="button" id="unlockBtn" class="mt-4 w-full bg-cyan-700 hover:bg-cyan-800 text-white font-bold py-3 rounded-lg shadow tracking-wider transition-colors">
+                ログイン
+            </button>
+        </div>
+    </div>
+    <script>
+        (function () {
+            const KEY = 'koc_unlocked';
+            const HASH = '5757';
+            if (sessionStorage.getItem(KEY) === '1') {
+                document.body.classList.remove('locked');
+                return;
+            }
+            function tryUnlock() {
+                const input = document.getElementById('passwordInput');
+                const err = document.getElementById('passwordError');
+                if (input.value === HASH) {
+                    sessionStorage.setItem(KEY, '1');
+                    document.body.classList.remove('locked');
+                } else {
+                    err.classList.remove('hidden');
+                    input.select();
+                }
+            }
+            window.addEventListener('DOMContentLoaded', function () {
+                const input = document.getElementById('passwordInput');
+                document.getElementById('unlockBtn').addEventListener('click', tryUnlock);
+                input.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter') { e.preventDefault(); tryUnlock(); }
+                });
+                input.focus();
+            });
+        })();
+    </script>
 
     <!-- ヘッダー部分 -->
     <header class="bg-cyan-700 text-white p-5 shadow-md">
