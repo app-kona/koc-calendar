@@ -58,7 +58,128 @@
         <div class="mt-6 text-center text-sm text-gray-600">
             <p>※カレンダーがうまく表示されない場合は、<a href="https://calendar.google.com/calendar/embed?src=c_863e3ae1649e0e82ebeef2a8f37dde53574e9db3694e5fd699ad4bc8b7f63782%40group.calendar.google.com&ctz=Asia%2FTokyo" target="_blank" rel="noopener noreferrer" class="text-cyan-600 underline font-bold hover:text-cyan-800 transition-colors">こちらをクリック</a>して別画面で開いてください。</p>
         </div>
+
+        <!-- オーナー予約フォーム -->
+        <section class="mt-10 bg-white p-5 md:p-8 rounded-xl shadow-lg border border-sky-100">
+            <h2 class="text-xl md:text-2xl font-bold text-cyan-800 tracking-wider border-b-2 border-cyan-200 pb-2 mb-2">オーナー予約フォーム</h2>
+            <p class="text-sm text-gray-600 mb-6">下記をご記入のうえ「メーラーで送信」ボタンを押してください。お使いのメールソフトが起動し、記入内容がそのままメール本文に貼り付けられます。最後に送信ボタンを押してください。</p>
+
+            <form id="ownerReservationForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">宿泊者の氏名 <span class="text-red-500">*</span></label>
+                    <input type="text" name="name" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-cyan-500" placeholder="例：山田 太郎">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">ふりがな <span class="text-red-500">*</span></label>
+                    <input type="text" name="kana" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-cyan-500" placeholder="例：やまだ たろう">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">メール <span class="text-red-500">*</span></label>
+                    <input type="email" name="email" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-cyan-500" placeholder="例：guest@example.com">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">性別 <span class="text-red-500">*</span></label>
+                    <select name="gender" required class="w-full border border-gray-300 rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                        <option value="">選択してください</option>
+                        <option value="男性">男性</option>
+                        <option value="女性">女性</option>
+                        <option value="その他">その他</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">生年月日 <span class="text-red-500">*</span></label>
+                    <input type="date" name="birthday" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">郵便番号 <span class="text-red-500">*</span></label>
+                    <input type="text" name="zip" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-cyan-500" placeholder="例：656-1554" pattern="\d{3}-?\d{4}">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">ご住所 <span class="text-red-500">*</span></label>
+                    <input type="text" name="address" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-cyan-500" placeholder="例：兵庫県淡路市深草928">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">当日連絡のつく電話番号 <span class="text-red-500">*</span></label>
+                    <input type="tel" name="phone" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-cyan-500" placeholder="例：090-1234-5678">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">宿泊棟 <span class="text-red-500">*</span></label>
+                    <select name="villa" required class="w-full border border-gray-300 rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                        <option value="">選択してください</option>
+                        <option value="BEACH">BEACH</option>
+                        <option value="SUNSET">SUNSET</option>
+                        <option value="COVE">COVE</option>
+                        <option value="OCEAN">OCEAN</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">宿泊人数 <span class="text-red-500">*</span></label>
+                    <input type="number" name="guests" required min="1" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-cyan-500" placeholder="例：4">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">チェックイン予定時間 <span class="text-red-500">*</span></label>
+                    <input type="time" name="checkin" required min="15:00" max="19:00" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                    <p class="text-xs text-gray-500 mt-1">※15:00から19:00の間で入力してください。（予定で構いません）</p>
+                </div>
+
+                <div class="pt-2">
+                    <label class="block text-sm font-bold text-gray-700 mb-1">★ 請求する宿泊料金をお知らせください <span class="text-red-500">*</span></label>
+                    <textarea name="price" required rows="2" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-cyan-500" placeholder="例：通常料金の２割引き ／ 80,000円 など"></textarea>
+                    <p class="text-xs text-gray-500 mt-1">カード決済リンクを宿泊者宛にメールでお送りします</p>
+                </div>
+
+                <div class="pt-4">
+                    <button type="submit" class="w-full bg-cyan-700 hover:bg-cyan-800 text-white font-bold py-3 rounded-lg shadow transition-colors tracking-wider">
+                        メーラーで送信する
+                    </button>
+                </div>
+            </form>
+        </section>
     </main>
+
+    <script>
+        (function () {
+            const form = document.getElementById('ownerReservationForm');
+            if (!form) return;
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const data = new FormData(form);
+                const get = (k) => (data.get(k) || '').toString();
+
+                const body =
+                    '■宿泊者の氏名：' + get('name') + '\n' +
+                    '■ふりがな：' + get('kana') + '\n' +
+                    '■メール：' + get('email') + '\n' +
+                    '■性別：' + get('gender') + '\n' +
+                    '■生年月日：' + get('birthday') + '\n' +
+                    '■郵便番号：' + get('zip') + '\n' +
+                    '■ご住所：' + get('address') + '\n' +
+                    '■当日連絡のつく電話番号：' + get('phone') + '\n' +
+                    '■宿泊棟：' + get('villa') + '\n' +
+                    '■宿泊人数：' + get('guests') + '人\n' +
+                    '■チェックイン予定時間：' + get('checkin') + '\n' +
+                    '\n' +
+                    '★請求する宿泊料金：\n' + get('price') + '\n';
+
+                const subject = 'KONA OCEAN CLUB オーナー予約';
+                const mailto = 'mailto:sugomori.awaji@gmail.com'
+                    + '?subject=' + encodeURIComponent(subject)
+                    + '&body=' + encodeURIComponent(body);
+
+                window.location.href = mailto;
+            });
+        })();
+    </script>
 
     <!-- フッター -->
     <footer class="bg-cyan-900 text-cyan-100 text-center p-4 text-xs tracking-wider mt-auto">
