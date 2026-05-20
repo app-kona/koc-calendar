@@ -138,10 +138,24 @@
                     <p class="text-xs text-gray-500 mt-1">カード決済リンクを宿泊者宛にメールでお送りします</p>
                 </div>
 
-                <div class="pt-4">
-                    <button type="submit" class="w-full bg-cyan-700 hover:bg-cyan-800 text-white font-bold py-3 rounded-lg shadow transition-colors tracking-wider">
-                        メーラーで送信する
+                <div class="pt-4 space-y-3">
+                    <button type="button" id="btnGmail" class="w-full bg-cyan-700 hover:bg-cyan-800 text-white font-bold py-3 rounded-lg shadow transition-colors tracking-wider">
+                        Gmailで開く（ブラウザ）
                     </button>
+                    <button type="button" id="btnMailto" class="w-full bg-white hover:bg-gray-50 text-cyan-800 font-bold py-3 rounded-lg shadow border border-cyan-300 transition-colors tracking-wider">
+                        メーラーで開く（Outlook等のデスクトップアプリ）
+                    </button>
+                </div>
+
+                <!-- 本文プレビュー＆コピー（どちらも使わない人向けの保険） -->
+                <div class="mt-6 pt-6 border-t border-gray-200">
+                    <p class="text-sm text-gray-600 mb-2">上のボタンがうまく動かない場合は、下記をコピーして <span class="font-bold">sugomori.awaji@gmail.com</span> 宛にメールしてください。</p>
+                    <p class="text-sm text-gray-600 mb-2">件名：<span class="font-mono bg-gray-100 px-2 py-1 rounded">KONA OCEAN CLUB オーナー予約</span></p>
+                    <textarea id="bodyPreview" readonly rows="14" class="w-full border border-gray-300 rounded-md px-3 py-2 bg-gray-50 text-sm font-mono" placeholder="フォームに入力すると、ここに送信用の本文が表示されます"></textarea>
+                    <button type="button" id="btnCopy" class="mt-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-md text-sm transition-colors">
+                        本文をコピー
+                    </button>
+                    <span id="copyMsg" class="ml-3 text-sm text-green-700 hidden">コピーしました</span>
                 </div>
             </form>
         </section>
@@ -151,13 +165,13 @@
         (function () {
             const form = document.getElementById('ownerReservationForm');
             if (!form) return;
-            form.addEventListener('submit', function (e) {
-                e.preventDefault();
+            const SUBJECT = 'KONA OCEAN CLUB オーナー予約';
+            const TO = 'sugomori.awaji@gmail.com';
+
+            function buildBody() {
                 const data = new FormData(form);
                 const get = (k) => (data.get(k) || '').toString();
-
-                const body =
-                    '■宿泊者の氏名：' + get('name') + '\n' +
+                return '■宿泊者の氏名：' + get('name') + '\n' +
                     '■ふりがな：' + get('kana') + '\n' +
                     '■メール：' + get('email') + '\n' +
                     '■性別：' + get('gender') + '\n' +
@@ -170,14 +184,61 @@
                     '■チェックイン予定時間：' + get('checkin') + '\n' +
                     '\n' +
                     '★請求する宿泊料金：\n' + get('price') + '\n';
+            }
 
-                const subject = 'KONA OCEAN CLUB オーナー予約';
-                const mailto = 'mailto:sugomori.awaji@gmail.com'
-                    + '?subject=' + encodeURIComponent(subject)
-                    + '&body=' + encodeURIComponent(body);
+            function validate() {
+                if (!form.reportValidity()) return false;
+                return true;
+            }
 
-                window.location.href = mailto;
+            // 入力に応じてプレビューを自動更新
+            const preview = document.getElementById('bodyPreview');
+            function refreshPreview() {
+                preview.value = buildBody();
+            }
+            form.addEventListener('input', refreshPreview);
+            form.addEventListener('change', refreshPreview);
+
+            // Gmail（ブラウザ）で開く
+            document.getElementById('btnGmail').addEventListener('click', function () {
+                if (!validate()) return;
+                const url = 'https://mail.google.com/mail/?view=cm&fs=1'
+                    + '&to=' + encodeURIComponent(TO)
+                    + '&su=' + encodeURIComponent(SUBJECT)
+                    + '&body=' + encodeURIComponent(buildBody());
+                window.open(url, '_blank', 'noopener');
             });
+
+            // mailto（デスクトップメーラー）で開く
+            document.getElementById('btnMailto').addEventListener('click', function () {
+                if (!validate()) return;
+                const url = 'mailto:' + TO
+                    + '?subject=' + encodeURIComponent(SUBJECT)
+                    + '&body=' + encodeURIComponent(buildBody());
+                window.location.href = url;
+            });
+
+            // 本文コピー
+            document.getElementById('btnCopy').addEventListener('click', function () {
+                refreshPreview();
+                preview.select();
+                preview.setSelectionRange(0, 99999);
+                let ok = false;
+                try {
+                    ok = document.execCommand('copy');
+                } catch (e) { ok = false; }
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(preview.value).then(function () { showCopied(); }).catch(function () { if (ok) showCopied(); });
+                } else if (ok) {
+                    showCopied();
+                }
+            });
+
+            function showCopied() {
+                const msg = document.getElementById('copyMsg');
+                msg.classList.remove('hidden');
+                setTimeout(function () { msg.classList.add('hidden'); }, 2000);
+            }
         })();
     </script>
 
